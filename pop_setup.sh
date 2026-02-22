@@ -50,9 +50,17 @@ if ! command -v docker &> /dev/null; then
     sudo usermod -aG docker $USER
 fi
 
-# --- 7. Databricks CLI ---
+# --- 7. Databricks CLI (Official Installer with Path Verification) ---
 echo "${green}Installing/Updating Databricks CLI...${reset}"
-curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+# Using the -s flag to the shell to specify the installation directory
+curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sudo sh
+
+# Verify installation immediately
+if command -v databricks &> /dev/null; then
+    echo "${blue}Databricks CLI version: $(databricks -v)${reset}"
+else
+    echo "${red}Warning: Databricks CLI not found in PATH. You may need to restart your terminal.${reset}"
+fi
 
 # --- 8. Git & SSH ---
 if [ -z "$(git config --global user.name)" ]; then
